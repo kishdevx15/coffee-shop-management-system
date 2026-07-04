@@ -1,0 +1,381 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kitchen — KishCraft Coffee</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:       #f0ebcf;
+      --maroon:      #2e1010;
+      --maroon-mid:  #3d1818;
+      --maroon-card: #4a1f1f;
+      --olive:       #7a5c1e;
+      --olive-btn:   #6b4f14;
+      --text-light:  #f0ebcf;
+      --text-muted:  #b89a7a;
+      --pending:     #c9882a;
+      --making:      #4a90c4;
+      --done:        #4caf7d;
+      --font-disp:   'Playfair Display', serif;
+      --font-body:   'Lato', sans-serif;
+    }
+    body { font-family: var(--font-body); background: var(--cream); color: var(--maroon); min-height: 100vh; display: flex; }
+
+    /* Sidebar */
+    .sidebar { width: 230px; min-height: 100vh; background: var(--maroon); display: flex; flex-direction: column; padding: 28px 20px; gap: 12px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; }
+    .back-btn { display: flex; align-items: center; gap: 8px; padding: 10px 4px; border: none; background: transparent; color: var(--text-muted); font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; cursor: pointer; margin-bottom: 4px; transition: color 0.15s; }
+    .back-btn:hover { color: var(--cream); }
+    .back-btn i { font-size: 1.1rem; }
+    .sidebar-logo { background: var(--maroon-mid); border-radius: 14px; padding: 20px 16px 18px; margin-bottom: 8px; }
+    .logo-icon { width: 52px; height: 52px; background: var(--cream); border-radius: 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .logo-name { font-family: var(--font-disp); font-size: 1.15rem; color: var(--cream); line-height: 1.2; }
+    .logo-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 5px; }
+    .live-dot { width: 7px; height: 7px; background: var(--done); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .nav-btn { width: 100%; padding: 14px 18px; border-radius: 10px; border: none; font-family: var(--font-body); font-size: 0.92rem; font-weight: 700; cursor: pointer; text-align: center; letter-spacing: 0.03em; transition: all 0.15s; color: var(--cream); background: var(--olive-btn); }
+    .nav-btn:hover, .nav-btn.active { background: var(--olive); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+    .logout-btn { width: 100%; padding: 12px 18px; border-radius: 10px; border: 1.5px solid var(--maroon-card); font-family: var(--font-body); font-size: 0.85rem; font-weight: 700; cursor: pointer; text-align: center; letter-spacing: 0.03em; transition: all 0.15s; color: var(--text-muted); background: transparent; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .logout-btn:hover { color: #e74c3c; border-color: #e74c3c; background: rgba(231,76,60,.08); }
+    .sidebar-clock { margin-top: auto; text-align: center; color: var(--text-muted); font-size: 0.78rem; }
+    .sidebar-clock .time { font-size: 1.3rem; font-weight: 900; color: var(--cream); display: block; margin-bottom: 2px; letter-spacing: 0.05em; }
+
+    /* Main */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .topbar { padding: 28px 28px 0; }
+    .topbar h1 { font-family: var(--font-disp); font-size: 2rem; font-weight: 700; color: var(--maroon); line-height: 1; }
+    .topbar .date { font-size: 0.85rem; color: var(--olive); margin-top: 4px; font-weight: 700; }
+
+    /* Stats */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 20px 28px 0; }
+    .stat-card { background: var(--maroon); border-radius: 16px; padding: 20px 22px; color: var(--cream); }
+    .stat-card .val { font-size: 2.2rem; font-weight: 900; line-height: 1; }
+    .stat-card .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-top: 4px; }
+    .stat-card .accent-bar { height: 3px; border-radius: 2px; margin-top: 12px; }
+    .stat-card.pending .accent-bar { background: var(--pending); }
+    .stat-card.making  .accent-bar { background: var(--making); }
+    .stat-card.done    .accent-bar { background: var(--done); }
+    .stat-card.pending .val { color: var(--pending); }
+    .stat-card.making  .val { color: var(--making); }
+    .stat-card.done    .val { color: var(--done); }
+
+    /* Filter tabs */
+    .filter-bar { display: flex; gap: 8px; padding: 18px 28px 0; }
+    .filter-btn { padding: 7px 18px; border-radius: 20px; border: 1.5px solid var(--maroon-card); background: transparent; color: var(--maroon); font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; transition: all 0.15s; opacity: 0.6; }
+    .filter-btn:hover { opacity: 1; border-color: var(--olive); }
+    .filter-btn.active { background: var(--maroon); color: var(--cream); opacity: 1; border-color: var(--maroon); }
+    .filter-btn .cnt { margin-left: 5px; font-size: 0.7rem; opacity: 0.8; }
+
+    /* Orders grid */
+    .orders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; padding: 18px 28px 28px; overflow-y: auto; flex: 1; }
+
+    /* Order card */
+    .order-card { background: var(--maroon); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.15s, box-shadow 0.15s; }
+    .order-card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(46,16,16,.35); }
+    .card-stripe { height: 4px; }
+    .status-pending .card-stripe { background: var(--pending); }
+    .status-making  .card-stripe { background: var(--making); }
+    .status-done    .card-stripe { background: var(--done); opacity: .5; }
+    .status-done { opacity: .7; }
+    .card-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 8px; }
+    .order-id { font-weight: 900; font-size: 1.05rem; color: var(--cream); }
+    .table-badge { display: flex; align-items: center; gap: 4px; background: var(--maroon-card); border-radius: 8px; padding: 4px 10px; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); }
+    .status-pill { font-size: 0.62rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border-radius: 20px; }
+    .pill-pending { background: rgba(201,136,42,.18); color: var(--pending); }
+    .pill-making  { background: rgba(74,144,196,.18); color: var(--making); }
+    .pill-done    { background: rgba(76,175,125,.18); color: var(--done); }
+    .divider { height: 1px; background: var(--maroon-card); margin: 0 16px; }
+    .items-list { padding: 10px 16px; flex: 1; }
+    .item-row { display: flex; align-items: center; padding: 6px 0; font-size: .84rem; color: var(--cream); }
+    .item-row + .item-row { border-top: 1px solid var(--maroon-card); }
+    .item-qty { width: 24px; height: 24px; background: var(--olive-btn); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: .78rem; color: var(--cream); flex-shrink: 0; margin-right: 10px; }
+    .item-name { flex: 1; }
+    .item-price { font-size: .75rem; color: var(--text-muted); }
+    .card-foot { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--maroon-card); }
+    .elapsed { display: flex; align-items: center; gap: 4px; font-size: .72rem; color: var(--text-muted); font-weight: 700; }
+    .elapsed.warn   { color: var(--pending); }
+    .elapsed.urgent { color: #e74c3c; }
+    .total { font-size: .85rem; font-weight: 900; color: var(--cream); }
+    .card-actions { padding: 0 16px 14px; display: flex; gap: 8px; }
+    .act-btn { flex: 1; padding: 10px; border-radius: 9px; border: none; font-family: var(--font-body); font-size: .75rem; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all .15s; }
+    .btn-start { background: var(--olive-btn); color: var(--cream); }
+    .btn-start:hover { background: var(--olive); }
+    .btn-done { background: rgba(76,175,125,.15); color: var(--done); border: 1.5px solid var(--done); }
+    .btn-done:hover { background: var(--done); color: #fff; }
+    .btn-undo { background: var(--maroon-card); color: var(--text-muted); border: 1.5px solid var(--maroon-card); flex: 0 0 auto; padding: 10px 12px; }
+    .btn-undo:hover { color: #e74c3c; border-color: #e74c3c; }
+
+    /* Top items */
+    .top-items-panel { background: var(--maroon); border-radius: 16px; padding: 18px 20px; margin: 20px 28px 28px; }
+    .top-items-panel h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--text-muted); margin-bottom: 12px; }
+    .top-item-row { display: flex; align-items: center; gap: 14px; padding: 8px 0; border-top: 1px solid var(--maroon-card); }
+    .top-item-img { width: 40px; height: 40px; background: var(--maroon-card); border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .top-item-name { font-size: .88rem; font-weight: 700; color: var(--cream); }
+    .top-item-count { font-size: .7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; }
+
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state i { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+
+    /* Toast */
+    #toast { position: fixed; bottom: 24px; right: 24px; background: var(--maroon); border: 1px solid var(--olive); color: var(--cream); border-radius: 10px; padding: 12px 18px; font-size: .85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.4); opacity: 0; transform: translateY(10px); transition: all .2s; z-index: 999; pointer-events: none; }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    @media(max-width:700px){
+      body { flex-direction: column; }
+      .sidebar { width: 100%; min-height: auto; height: auto; flex-direction: row; flex-wrap: wrap; padding: 12px 16px; position: static; }
+      .sidebar-logo, .sidebar-clock, .back-btn span { display: none; }
+      .nav-btn { flex: 1; }
+      .orders-grid { padding: 12px 16px; }
+      .topbar, .filter-bar { padding-left: 16px; padding-right: 16px; }
+      .top-items-panel { margin: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <button class="back-btn" onclick="window.history.back()">
+    <i class="ti ti-arrow-left"></i> <span>Back</span>
+  </button>
+  <div class="sidebar-logo">
+    <div class="logo-icon">☕</div>
+    <div class="logo-name">KishCraft Coffee</div>
+    <div class="logo-sub"><span class="live-dot"></span> Live Self-service</div>
+  </div>
+  <button class="nav-btn active" onclick="showView('dashboard', this)">Dashboard</button>
+  <button class="nav-btn" onclick="showView('orders', this)">Orders</button>
+  <a href="{% url 'staff_logout' %}" class="logout-btn">
+    <i class="ti ti-logout"></i> Logout
+  </a>
+  <div class="sidebar-clock">
+    <span class="time" id="clock">--:--</span>
+    <span id="date-label"></span>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Dashboard view -->
+  <div id="view-dashboard">
+    <div class="topbar">
+      <h1>Dashboard</h1>
+      <div class="date" id="topbar-date"></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card pending">
+        <div class="val">{{ counts.pending }}</div>
+        <div class="label">Pending</div>
+        <div class="accent-bar"></div>
+      </div>
+      <div class="stat-card making">
+        <div class="val">{{ counts.making }}</div>
+        <div class="label">Making</div>
+        <div class="accent-bar"></div>
+      </div>
+      <div class="stat-card done">
+        <div class="val">{{ counts.done }}</div>
+        <div class="label">Done Today</div>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="top-items-panel">
+      <h3>top items today</h3>
+      {% for item in top_items %}
+      <div class="top-item-row">
+        <div class="top-item-img">🍽</div>
+        <div>
+          <div class="top-item-name">{{ item.product_name }}</div>
+          <div class="top-item-count">{{ item.total_qty }} orders</div>
+        </div>
+      </div>
+      {% empty %}
+      <p style="color:var(--text-muted);font-size:.85rem;">No orders yet today.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Orders view -->
+  <div id="view-orders" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+    <div class="topbar">
+      <h1>Orders</h1>
+      <div class="date" id="orders-date"></div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All <span class="cnt" id="cnt-all">0</span></button>
+      <button class="filter-btn" onclick="setFilter('pending',this)">Pending <span class="cnt" id="cnt-pending">0</span></button>
+      <button class="filter-btn" onclick="setFilter('making',this)">Making <span class="cnt" id="cnt-making">0</span></button>
+      <button class="filter-btn" onclick="setFilter('done',this)">Done <span class="cnt" id="cnt-done">0</span></button>
+    </div>
+
+    <div class="orders-grid" id="orders-grid">
+      <div class="empty-state"><i class="ti ti-loader"></i><p>Loading orders…</p></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"><i class="ti ti-check"></i><span id="toast-msg"></span></div>
+
+<script>
+const ORDERS_URL        = "{% url 'kitchen_orders' %}";
+const BASE_ORDER_URL = "/kitchen/orders/";
+const CSRF_TOKEN        = "{{ csrf_token }}";
+
+let allOrders     = [];
+let currentFilter = 'all';
+
+// ── Fetch orders from Django ──
+async function fetchOrders() {
+  const res  = await fetch(`${ORDERS_URL}?status=all`);
+  const data = await res.json();
+  allOrders  = data.orders;
+  updateCounts();
+  renderOrders();
+}
+
+// ── Update status via AJAX ──
+async function updateStatus(id, newStatus) {
+    const res = await fetch(`${BASE_ORDER_URL}${id}/status/`,  {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+    body:    JSON.stringify({ status: newStatus }),
+  });
+  const data = await res.json();
+  if (data.success) {
+    const o = allOrders.find(o => o.id === id);
+    if (o) o.status = newStatus;
+    updateCounts();
+    renderOrders();
+    const msgs = { making: '☕ Started making', done: '✅ Order done', pending: '↩️ Moved back to pending' };
+    showToast(msgs[newStatus] || 'Updated');
+  }
+}
+
+// ── Counts ──
+function updateCounts() {
+  const c = { pending: 0, making: 0, done: 0 };
+  allOrders.forEach(o => c[o.status]++);
+  document.getElementById('cnt-all').textContent     = allOrders.length;
+  document.getElementById('cnt-pending').textContent = c.pending;
+  document.getElementById('cnt-making').textContent  = c.making;
+  document.getElementById('cnt-done').textContent    = c.done;
+}
+
+// ── Elapsed time ──
+function getElapsed(placed_at) {
+  const m = Math.floor((Date.now() - new Date(placed_at)) / 60000);
+  if (m < 1)  return { label: 'Just now', cls: '' };
+  if (m < 10) return { label: `${m}m ago`, cls: '' };
+  if (m < 20) return { label: `${m}m ago`, cls: 'warn' };
+  return { label: `${m}m ago`, cls: 'urgent' };
+}
+
+// ── Render order cards ──
+function renderOrders() {
+  const grid     = document.getElementById('orders-grid');
+  const filtered = currentFilter === 'all' ? allOrders : allOrders.filter(o => o.status === currentFilter);
+  const sord     = { pending: 0, making: 1, done: 2 };
+  filtered.sort((a, b) => sord[a.status] - sord[b.status] || new Date(a.placed_at) - new Date(b.placed_at));
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><i class="ti ti-coffee-off"></i><p>No orders here</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(o => {
+    const el    = getElapsed(o.placed_at);
+    const items = o.items.map(i => `
+      <div class="item-row">
+        <span class="item-qty">${i.quantity}</span>
+        <span class="item-name">${i.product_name}</span>
+        <span class="item-price">₹${(i.price * i.quantity).toFixed(0)}</span>
+      </div>`).join('');
+
+    let actions = '';
+    if (o.status === 'pending') {
+      actions = `<button class="act-btn btn-start" onclick="updateStatus(${o.id},'making')"><i class="ti ti-chef-hat"></i> Start Making</button>`;
+    } else if (o.status === 'making') {
+      actions = `
+        <button class="act-btn btn-undo" onclick="updateStatus(${o.id},'pending')"><i class="ti ti-arrow-back-up"></i></button>
+        <button class="act-btn btn-done" onclick="updateStatus(${o.id},'done')"><i class="ti ti-check"></i> Mark Done</button>`;
+    } else {
+      actions = `<button class="act-btn btn-undo" onclick="updateStatus(${o.id},'making')"><i class="ti ti-arrow-back-up"></i> Undo</button>`;
+    }
+
+    return `
+      <div class="order-card status-${o.status}">
+        <div class="card-stripe"></div>
+        <div class="card-head">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="order-id">#${o.id}</span>
+            <span class="table-badge"><i class="ti ti-armchair"></i> Table ${o.table_number}</span>
+          </div>
+          <span class="status-pill pill-${o.status}">${o.status}</span>
+        </div>
+        <div class="divider"></div>
+        <div class="items-list">${items}</div>
+        <div class="card-foot">
+          <span class="elapsed ${el.cls}"><i class="ti ti-clock"></i> ${el.label}</span>
+          <span class="total">₹${o.total.toFixed(0)}</span>
+        </div>
+        <div class="card-actions">${actions}</div>
+      </div>`;
+  }).join('');
+}
+
+// ── Filter ──
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders();
+}
+
+// ── View switcher ──
+function showView(v, btn) {
+  document.getElementById('view-dashboard').style.display = v === 'dashboard' ? 'block' : 'none';
+  document.getElementById('view-orders').style.display    = v === 'orders'    ? 'flex'  : 'none';
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (v === 'orders') fetchOrders();
+}
+
+// ── Clock ──
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent    = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  const ds = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('date-label').textContent  = ds;
+  document.getElementById('topbar-date').textContent = ds;
+  document.getElementById('orders-date').textContent = ds;
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── Auto-refresh orders every 30s ──
+setInterval(fetchOrders, 30000);
+
+// ── Init ──
+setInterval(updateClock, 1000);
+updateClock();
+fetchOrders();
+</script>
+</body>
+</html>

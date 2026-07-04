@@ -1,0 +1,98 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    max-width: 402px;
+    min-height: 100vh;
+    background-color: #4d1818;
+    position: relative;
+}
+
+.inner-box {
+    width: 85%;
+    max-width: 340px;
+    height: auto;
+    background-color: #f5f3c8;
+    border-radius: 20px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 24px 20px 28px;
+}
+
+.nm {
+    font-family: 'Irish Grover', serif;
+    width: 90%;
+    height: 56px;
+    padding-left: 20px;
+    border-radius: 30px;
+    border: none;
+    background-color: #d9d9d9;
+    font-size: 18px;
+    color: #4d1818;
+    outline: none;
+    display: block;
+    margin-bottom: 16px;
+    z-index: 2;
+    position: relative;
+}
+.tb-n::placeholder {
+    font-family: 'Irish Grover', cursive;
+}
+
+.tb-n {
+    font-family: 'Irish Grover', cursive !important;
+
+    width: 45%;
+    height: 50px;
+    border-radius: 30px;
+    border: none;
+
+    padding-left: 20px;
+    background-color: #d9d9d9;
+
+    font-size: 18px;
+    color: #4d1818;
+    outline: none;
+}
+
+.mini {
+    font-size: 10px;
+    font-family: 'Irish Grover', serif;
+    display: none;
+    margin-bottom: 12px;
+    padding-left: 4px;
+    color: #4d1818;
+}
+
+.head {
+    position: absolute;
+    top: 26%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 24px;
+    color: white;
+    font-family: 'Lilita One', serif;
+}
+
+.but {
+    display: block;
+    padding: 15px 20px;
+    border-radius: 20px;
+    background: #f3d854;
+    font-family: 'Irish Grover', serif;
+    border: none;
+    cursor: pointer;
+    margin: 0 auto;
+    font-size: 15px;
+}
+
+.but:hover {
+    border: 1px solid white;
+}

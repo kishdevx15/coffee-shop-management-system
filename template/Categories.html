@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}KishCraft Coffee{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'cart' %}">
+    <div class="top-bar">
+        <div class="greeting">
+            Good morning ☀️
+            <strong>KishCraft Coffee</strong>
+        </div>
+        <button class="cart-btn" type="submit" title="Cart">🛒</button>
+    </div>
+</form>
+
+<div class="hero">
+    <div class="hero-deco1"></div>
+    <div class="hero-deco2"></div>
+    <div class="hero-tag">Today's pick</div>
+    <div class="hero-title">Sip. Smile.<br>Repeat.</div>
+    <div class="hero-sub">"Crafted with love, every cup." — KishCraft</div>
+</div>
+
+<div class="search-inline">
+    <input type="text" id="menuSearch" class="search-input" placeholder="Search categories...">
+</div>
+
+<div class="section-label">Our Menu <span class="badge">{{ categories|length }} categories</span></div>
+
+<div class="menu-list" id="menuList">
+
+    {% for category in categories %}
+
+    <form method="POST" action="{% url 'category_detail' %}" class="menu-form">
+        {% csrf_token %}
+
+        <input type="hidden" name="category_id" value="{{ category.id }}">
+
+        <div class="menu-card">
+
+            <div class="menu-icon icon-coffee">
+                <img src="{{ category.image.url }}" alt="{{ category.name }}">
+            </div>
+
+            <div class="menu-info">
+                <div class="menu-name">{{ category.name }}</div>
+                <div class="menu-desc">{{ category.description }}</div>
+            </div>
+
+            <button type="submit" class="menu-arrow">›</button>
+
+        </div>
+
+    </form>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('menuSearch').addEventListener('input', function () {
+        let value = this.value.toLowerCase();
+
+        document.querySelectorAll('#menuList .menu-form').forEach(form => {
+            let name = form.querySelector('.menu-name').innerText.toLowerCase();
+            form.style.display = name.includes(value) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

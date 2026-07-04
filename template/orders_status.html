@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Order</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f3c8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .back-btn {
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 1rem;
+    }
+
+    .back-btn a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #7A5030;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-btn a:hover {
+      color: #3B1F0C;
+    }
+
+    .back-btn a span {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 420px;
+      background: #3B1F0C;
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .top-bar .label {
+      font-size: 12px;
+      color: #A07850;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .top-bar .customer-name {
+      font-size: 26px;
+      font-weight: 600;
+      color: #F5E6D3;
+    }
+
+    .top-bar .table-info {
+      font-size: 13px;
+      color: #A07850;
+      margin-top: 4px;
+    }
+
+    .status-banner {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    .status-banner.pending {
+      background: #EDE8E0;
+      border: 1.5px solid #C8B89A;
+    }
+
+    .status-banner.making {
+      background: #FFF3DC;
+      border: 1.5px solid #E8B84B;
+    }
+
+    .status-banner.done {
+      background: #E4F5E1;
+      border: 1.5px solid #6DBF5A;
+    }
+
+    .status-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .status-text .status-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .status-banner.pending .status-title { color: #7A6040; }
+    .status-banner.making  .status-title { color: #8A5E00; }
+    .status-banner.done    .status-title { color: #2E7D20; }
+
+    .status-text .status-sub {
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .status-banner.pending .status-sub { color: #A08060; }
+    .status-banner.making  .status-sub { color: #B07E20; }
+    .status-banner.done    .status-sub { color: #4A9E38; }
+
+    .pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #E8B84B;
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .items-card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #E8DDD0;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    .items-card-header {
+      background: #3B1F0C;
+      padding: 0.75rem 1.25rem;
+      font-size: 13px;
+      font-weight: 600;
+      color: #A07850;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid #F0E8DC;
+    }
+
+    .item-row:last-child { border-bottom: none; }
+
+    .item-left { display: flex; align-items: center; gap: 10px; }
+
+    .item-qty {
+      background: #F5EFE6;
+      color: #7A5030;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    .item-name { font-size: 15px; color: #2C1A0A; font-weight: 500; }
+
+    .item-price { font-size: 14px; color: #7A5030; font-weight: 500; }
+
+    .total-row {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #E8DDD0;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-label { font-size: 14px; color: #7A5030; }
+    .total-amount { font-size: 18px; font-weight: 700; color: #3B1F0C; }
+
+    .refresh-hint {
+      margin-top: 1.5rem;
+      font-size: 12px;
+      color: #B09878;
+      text-align: center;
+    }
+
+    /* Empty state (no order placed yet) */
+    .empty-card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #E8DDD0;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 0.75rem;
+    }
+
+    .empty-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #3B1F0C;
+      margin-bottom: 6px;
+    }
+
+    .empty-sub {
+      font-size: 13px;
+      color: #A07850;
+      margin-bottom: 1.5rem;
+    }
+
+    .empty-cta {
+      display: inline-block;
+      background: #3B1F0C;
+      color: #F5E6D3;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 10px 22px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back button -->
+  <div class="back-btn">
+    <a href="javascript:history.back()">
+      <span>&#8592;</span> Back
+    </a>
+  </div>
+
+  {% if order %}
+
+    <!-- Customer name header -->
+    <div class="top-bar">
+      <div class="label">Order for</div>
+      <div class="customer-name">{{ order.customer_name }}</div>
+      <div class="table-info">Table {{ order.table_number }} &nbsp;·&nbsp; #{{ order.id }}</div>
+    </div>
+
+    <!-- Status banner -->
+    {% if order.status == 'pending' %}
+    <div class="status-banner pending">
+      <div class="status-icon">🕐</div>
+      <div class="status-text">
+        <div class="status-title">Order received</div>
+        <div class="status-sub">We'll start preparing it shortly</div>
+      </div>
+    </div>
+
+    {% elif order.status == 'making' %}
+    <div class="status-banner making">
+      <div class="status-icon">☕</div>
+      <div class="status-text">
+        <div class="status-title"><span class="pulse-dot"></span>Making your order…</div>
+        <div class="status-sub">Please wait, we're preparing it fresh</div>
+      </div>
+    </div>
+
+    {% elif order.status == 'done' %}
+    <div class="status-banner done">
+      <div class="status-icon">✅</div>
+      <div class="status-text">
+        <div class="status-title">Ready! Come pick it up</div>
+        <div class="status-sub">Your order is waiting at the counter</div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Items list -->
+    <div class="items-card">
+      <div class="items-card-header">Your items</div>
+      {% for item in order.items.all %}
+      <div class="item-row">
+        <div class="item-left">
+          <span class="item-qty">{{ item.quantity }}×</span>
+          <span class="item-name">{{ item.product_name }}</span>
+        </div>
+        <span class="item-price">₹{{ item.subtotal|floatformat:2 }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Total -->
+    <div class="total-row">
+      <span class="total-label">Total</span>
+      <span class="total-amount">₹{{ order.get_total|floatformat:2 }}</span>
+    </div>
+
+    <p class="refresh-hint">Refresh this page to see the latest status</p>
+
+  {% else %}
+
+    <div class="empty-card">
+      <div class="empty-icon">🧾</div>
+      <div class="empty-title">No orders yet</div>
+      <div class="empty-sub">You haven't placed an order yet. Pick something from the menu to get started.</div>
+      <a href="javascript:history.back()" class="empty-cta">Browse Menu</a>
+    </div>
+
+  {% endif %}
+
+</body>
+</html>

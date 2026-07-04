@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Billing — KishCraft Coffee</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #f0ebcf;
+      --maroon:      #2e1010;
+      --maroon-mid:  #3d1818;
+      --maroon-card: #4a1f1f;
+      --olive:       #7a5c1e;
+      --olive-btn:   #6b4f14;
+      --text-muted:  #b89a7a;
+      --green:       #4caf7d;
+      --font-disp:   'Playfair Display', serif;
+      --font-body:   'Lato', sans-serif;
+    }
+
+    body { font-family: var(--font-body); background: var(--cream); color: var(--maroon); min-height: 100vh; }
+
+    header {
+      background: var(--maroon); color: var(--cream);
+      padding: 0 2rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--text-muted); text-decoration: none;
+      font-size: .85rem; font-weight: 700;
+      padding: 8px 14px; border-radius: 8px;
+      background: transparent; border: none; cursor: pointer;
+      font-family: var(--font-body);
+      transition: color .15s, background .15s;
+    }
+    .back-btn:hover { color: var(--cream); background: var(--maroon-mid); }
+
+    .logo { font-family: var(--font-disp); font-size: 1.3rem; color: var(--cream); }
+    .logo span { color: var(--text-muted); }
+
+    .nav-links { display: flex; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: .82rem;
+      font-weight: 700; margin-left: 1.5rem; letter-spacing: .03em; text-transform: uppercase;
+      transition: color .15s;
+    }
+    .nav-links a.active, .nav-links a:hover { color: var(--cream); }
+    .nav-links a.logout-link {
+      margin-left: 1.5rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1.5px solid var(--maroon-card);
+      color: var(--text-muted);
+    }
+    .nav-links a.logout-link:hover { color: #ff8a7a; border-color: #e74c3c; background: rgba(231,76,60,.1); }
+
+    .page { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    .page-title { font-family: var(--font-disp); font-size: 2rem; color: var(--maroon); margin-bottom: .2rem; }
+    .page-sub { color: var(--olive); font-size: .9rem; margin-bottom: 2rem; font-weight: 700; }
+
+    .section-head { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+    .section-head h2 {
+      font-size: .78rem; font-weight: 900; color: var(--olive);
+      text-transform: uppercase; letter-spacing: .1em;
+    }
+    .badge {
+      background: var(--maroon); color: var(--cream); font-size: .68rem;
+      font-weight: 900; padding: .18rem .55rem; border-radius: 20px;
+    }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 3rem; }
+
+    .bill-card { background: var(--maroon); border-radius: 16px; overflow: hidden; transition: transform .15s, box-shadow .15s; }
+    .bill-card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(46,16,16,.35); }
+
+    .card-top { background: var(--maroon-mid); color: var(--cream); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+    .card-top .order-no { font-family: var(--font-disp); font-size: 1.05rem; }
+    .table-chip {
+      background: var(--maroon-card); border-radius: 8px; padding: 4px 10px;
+      font-size: .72rem; font-weight: 700; color: var(--text-muted);
+    }
+
+    .card-body { padding: 16px; }
+    .customer-name { font-weight: 900; font-size: 1rem; color: var(--cream); margin-bottom: 10px; }
+
+    .items-list { list-style: none; margin-bottom: 12px; }
+    .items-list li {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .84rem; color: var(--cream); padding: 6px 0;
+      border-top: 1px solid var(--maroon-card);
+    }
+    .items-list li:first-child { border-top: none; }
+    .items-list .item-sub { color: var(--text-muted); font-size: .75rem; }
+
+    .card-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 10px; border-top: 1px solid var(--maroon-card);
+    }
+    .card-total .label { font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+    .card-total .amount { font-family: var(--font-disp); font-size: 1.3rem; color: var(--cream); }
+
+    .card-actions { padding: 14px 16px; border-top: 1px solid var(--maroon-card); }
+
+    .phone-row { display: flex; gap: .5rem; margin-bottom: 10px; }
+    .phone-row input {
+      flex: 1; border: 1.5px solid var(--maroon-card); border-radius: 8px;
+      padding: 10px 12px; font-size: .85rem; font-family: var(--font-body);
+      background: var(--maroon-mid); color: var(--cream); outline: none;
+    }
+    .phone-row input::placeholder { color: var(--text-muted); }
+    .phone-row input:focus { border-color: var(--olive); }
+
+    .btn-wa {
+      display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+      width: 100%; padding: 10px;
+      background: #25D366; color: #fff;
+      border: none; border-radius: 9px;
+      font-size: .85rem; font-weight: 900; font-family: var(--font-body);
+      text-transform: uppercase; letter-spacing: .04em;
+      cursor: pointer; transition: opacity .2s;
+    }
+    .btn-wa:hover { opacity: .9; }
+    .btn-wa:disabled { background: var(--maroon-card); color: var(--text-muted); cursor: not-allowed; }
+
+    .bill-done-banner {
+      background: rgba(76,175,125,.15); border: 1.5px solid var(--green); border-radius: 8px;
+      padding: 10px 14px; font-size: .84rem; color: var(--green); font-weight: 700; text-align: center;
+    }
+
+    .empty { text-align: center; padding: 3rem 1rem; color: var(--olive); margin-bottom: 3rem; font-weight: 700; }
+    .empty .icon { font-size: 3rem; margin-bottom: .75rem; }
+
+    .history-table-wrap { background: var(--maroon); border-radius: 16px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--maroon-mid); }
+    thead th {
+      padding: 12px 16px; text-align: left; font-size: .72rem;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); font-weight: 900;
+    }
+    tbody tr { border-top: 1px solid var(--maroon-card); }
+    tbody tr:hover { background: var(--maroon-mid); }
+    tbody td { padding: 12px 16px; font-size: .86rem; color: var(--cream); }
+    .td-muted { color: var(--text-muted); font-size: .8rem; }
+    .td-amount { font-weight: 900; color: var(--cream); font-family: var(--font-disp); }
+    .wa-sent { color: var(--green); font-size: .8rem; font-weight: 700; }
+    .wa-no { color: var(--text-muted); font-size: .8rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <button type="button" class="back-btn" onclick="window.history.back()">
+      <i class="ti ti-arrow-left"></i> Back
+    </button>
+    <div class="logo">Kish<span>Craft</span> Coffee</div>
+  </div>
+  <nav class="nav-links">
+    <a href="{% url 'kitchen_dashboard' %}">Kitchen</a>
+    <a href="{% url 'billing_dashboard' %}" class="active">Billing</a>
+    <a href="{% url 'staff_logout' %}" class="logout-link">Logout</a>
+  </nav>
+</header>
+
+<div class="page">
+  <h1 class="page-title">Billing</h1>
+  <p class="page-sub">Send WhatsApp receipts and close out completed orders.</p>
+
+  <!-- ── Pending Bills ── -->
+  <div class="section-head">
+    <h2>Ready to Bill</h2>
+    <span class="badge">{{ pending_bills|length }}</span>
+  </div>
+
+  {% if pending_bills %}
+  <div class="cards-grid">
+    {% for order in pending_bills %}
+    <div class="bill-card" id="card-{{ order.id }}">
+      <div class="card-top">
+        <span class="order-no">Order #{{ order.id }}</span>
+        <span class="table-chip">Table {{ order.table_number }}</span>
+      </div>
+      <div class="card-body">
+        <p class="customer-name">{{ order.customer_name }}</p>
+        <ul class="items-list">
+          {% for item in order.items.all %}
+          <li>
+            <span>{{ item.quantity }}× {{ item.product_name }}</span>
+            <span class="item-sub">₹{{ item.subtotal }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="card-total">
+          <span class="label">Total</span>
+          <span class="amount">₹{{ order.get_total }}</span>
+        </div>
+      </div>
+      <div class="card-actions" id="actions-{{ order.id }}">
+        <div class="phone-row">
+          <input type="tel" id="phone-{{ order.id }}" placeholder="+91 98765 43210  (optional)" maxlength="16"/>
+        </div>
+        <button class="btn-wa" onclick="finaliseBill({{ order.id }})">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Bill &amp; Send WhatsApp
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty">
+    <div class="icon">☕</div>
+    <p>No orders ready to bill right now.</p>
+  </div>
+  {% endif %}
+
+  <!-- ── History ── -->
+  <div class="section-head">
+    <h2>Billing History</h2>
+    <span class="badge">{{ history|length }}</span>
+  </div>
+
+  {% if history %}
+  <div class="history-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Customer</th><th>Table</th><th>Total</th><th>WhatsApp</th><th>Billed At</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rec in history %}
+        <tr>
+          <td class="td-muted">{{ rec.id }}</td>
+          <td><strong>{{ rec.customer_name }}</strong></td>
+          <td>Table {{ rec.table_number }}</td>
+          <td class="td-amount">₹{{ rec.total_amount }}</td>
+          <td>
+            {% if rec.phone_number %}
+              <span class="wa-sent">✓ {{ rec.phone_number }}</span>
+            {% else %}
+              <span class="wa-no">—</span>
+            {% endif %}
+          </td>
+          <td class="td-muted">{{ rec.billed_at|date:"d M, H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">
+    <div class="icon">📋</div>
+    <p>No billing history yet.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+const CSRF = '{{ csrf_token }}';
+
+async function finaliseBill(orderId) {
+  const btn   = document.querySelector(`#actions-${orderId} .btn-wa`);
+  const phone = document.getElementById(`phone-${orderId}`).value.trim();
+
+  btn.disabled = true;
+  btn.textContent = 'Processing…';
+
+  try {
+    const res = await fetch(`/billing/order/${orderId}/finalise/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': CSRF, 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `phone=${encodeURIComponent(phone)}`,
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || 'Something went wrong.');
+      btn.disabled = false;
+      btn.innerHTML = '&#128172; Bill &amp; Send WhatsApp';
+      return;
+    }
+
+    if (data.wa_url) window.open(data.wa_url, '_blank');
+
+    document.getElementById(`actions-${orderId}`).innerHTML = `
+      <div class="bill-done-banner">
+        ✅ Billed${phone ? ' · WhatsApp sent to ' + phone : ' · No WhatsApp (no phone entered)'}
+      </div>`;
+
+  } catch(err) {
+    alert('Network error. Try again.');
+    btn.disabled = false;
+    btn.innerHTML = '&#128172; Bill &amp; Send WhatsApp';
+  }
+}
+</script>
+</body>
+</html>

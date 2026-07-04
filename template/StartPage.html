@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Miltonian+Tattoo&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Chonburi&display=swap" rel="stylesheet">
+    
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Crafty+Girls&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div class="container">
+        <form method="get" action="Table-booking">
+
+      
+    
+        <h1 class="title">
+            KishCraft
+        </h1>
+
+       <hr  class="line-hd" width="222px">
+       <img src="{% static 'img/download (1) 1.png' %}" class="coffe-img2">
+       <h1 class="title-2">FRESH ON</h1>
+       <h1 class="title-3">THE MENU..</h1>
+       <img src="{% static 'img/coffe2 1.png' %}" class="coff3">
+       <img src="{% static 'img/Screenshot 2026-05-13 215846 1.png' %}" class="coff4">
+       <img src="{% static 'img/coffe3 1.png' %}" class="coff5">
+       <img src="{% static 'img/coffe5 1.png' %}" class="coff6">
+       <button class="button" type="submit ">Order Now </i></button>
+       <hr width="352px" style="position: absolute; top: 704px; left: 23px;">
+       <p class="par">"At KishCraft, coffee isn’t just a drink — it’s an experience. From the first pour to the last sip, every cup is crafted with passion, blending rich flavors and smooth textures that keep your day alive. Discover freshness on the menu and let every sip spark your story."</p>
+    </form>
+    </div>
+    <style>
+        *{
+    padding: 0%;
+    margin: 0;
+    box-sizing:border-box;
+}
+body{
+    margin:0;
+    
+}
+
+.container{
+    position: relative;
+    width: 100%;
+    max-width: 402px;
+    height: 874px;
+    min-height: 100vh;
+    background: #EAECCB;
+    overflow-x: hidden;
+    margin: 0 auto;
+}
+
+
+.title{
+    position:absolute;
+    top: 54px;
+    left: 83px;
+
+    font-family:'Miltonian Tattoo', serif;
+    font-size: 37px;
+    color:#5A2D2D;
+
+    margin:0;
+}
+.line-hd{
+    position:absolute;
+    top: 94px;
+    left: 93px;
+    background-color: #5A2D2D;
+    z-index: 3;
+    
+}
+.coffe-img2{
+    position: absolute;
+    top: -1px;
+    left: 256px ;
+    z-index: 1;
+}
+.title-2{
+    position:absolute;
+    top: 90px;
+    left: 75px ;
+
+    font-family:'chonburi', serif;
+    font-size: 45px;
+    color:#5A2D2D;
+
+    
+}
+.title-3{
+    position:absolute;
+    top: 136px;
+    left: 122px;
+
+    font-family:'Crafty Girls', serif;
+    font-size: 32px;
+    color:#5A2D2D;
+
+    margin:0;
+}
+.coff3{
+    position: absolute;
+    top: 124px;
+    left: 84px;
+}
+.coff4{
+    position: absolute;
+    top: 191px;
+    left: 10px;
+    z-index: 2;
+}
+.coff5{
+    position: absolute;
+    top: 182px;
+    left: 116px;
+
+}
+.coff6{
+    position: absolute;
+    top: 491px;
+    left: 70px;
+    
+}
+.button{
+
+    background-color: #5A2D2D;
+    width: 75px;
+    height: 35px;
+    
+    border-radius: 15px;
+    color: antiquewhite;
+    position: absolute;
+    top: 638px;
+    left: 149px;
+    font-family: 'Irish Grover', serif;
+    border: 5px white;
+
+}
+.par{
+    font-family: 'Irish Grover',serif;
+    position: absolute;
+    top: 716px;
+    left: 28px;
+    text-align: center;
+    width: 346px;
+    height: 103px ;
+}
+
+
+
+    </style>
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coffee Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'css/style4.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Purple+Purse&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="coffee-app">
+
+    <button type="button" onclick="window.history.back()" class="back-btn">
+        ←
+    </button>
+
+    <h1 class="app-title">Coffee Menu</h1>
+ 
+    <div class="search-box">
+        <input type="text" class="search-input" placeholder="Search your favorite coffee...">
+    </div>
+
+    <div class="product-list">
+
+        {% for product in products %}
+
+        <div class="product-card">
+
+            <div class="product-content">
+
+                <img src="{{ product.image.url }}" class="product-image">
+
+                <h2 class="product-title">{{ product.name }}</h2>
+
+                <p class="product-description">{{ product.description }}</p>
+
+                <h3 class="product-price">₹{{ product.price }}</h3>
+
+                <button
+                    class="explore-btn"
+                    data-id="{{ product.id }}"
+                    data-name="{{ product.name }}"
+                    data-price="{{ product.price }}"
+                    onclick="openBox(this)">
+                    Explore
+                </button>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- POPUP -->
+<div class="order" id="orderBox" style="display:none;">
+
+    <div class="order-card">
+
+        <h2 class="coffee-name"></h2>
+        <p class="coffee-price"></p>
+
+        <div class="quantity-box">
+            <button type="button" onclick="decreaseQty()">-</button>
+            <span class="qty-number">1</span>
+            <button type="button" onclick="increaseQty()">+</button>
+        </div>
+
+        <!-- NO FORM NOW -->
+        <input type="hidden" id="product_id">
+        <input type="hidden" id="quantity_input">
+
+        <button type="button" class="add-cart-btn" onclick="addToCart()">
+            Add to Cart
+        </button>
+
+        <button type="button" onclick="closeBox()" class="close-btn">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+<!-- TOAST MESSAGE -->
+<div id="toast" style="
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: green;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: none;
+">
+    Added to cart ✔
+</div>
+
+<script>
+
+let quantity = 1;
+
+// OPEN POPUP
+function openBox(btn){
+
+    let id = btn.dataset.id;
+    let name = btn.dataset.name;
+    let price = btn.dataset.price;
+
+    document.getElementById("orderBox").style.display = "block";
+
+    document.querySelector(".coffee-name").innerText = name;
+    document.querySelector(".coffee-price").innerText = "₹" + price;
+
+    document.getElementById("product_id").value = id;
+
+    quantity = 1;
+    document.querySelector(".qty-number").innerText = quantity;
+    document.getElementById("quantity_input").value = quantity;
+}
+
+// INCREASE
+function increaseQty(){
+    quantity++;
+    document.querySelector(".qty-number").innerText = quantity;
+    document.getElementById("quantity_input").value = quantity;
+}
+
+// DECREASE
+function decreaseQty(){
+    if(quantity > 1){
+        quantity--;
+        document.querySelector(".qty-number").innerText = quantity;
+        document.getElementById("quantity_input").value = quantity;
+    }
+}
+
+// CLOSE POPUP
+function closeBox(){
+    document.getElementById("orderBox").style.display = "none";
+}
+
+// TOAST
+function showToast(msg){
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 2000);
+}
+
+// ADD TO CART (AJAX)
+function addToCart(){
+
+    let productId = document.getElementById("product_id").value;
+    let qty = document.getElementById("quantity_input").value;
+
+    fetch("{% url 'add_to_cart' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: "product_id=" + productId + "&quantity=" + qty
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if(data.status === "success"){
+            showToast("Added to cart ✔");
+            closeBox();
+        } else {
+            showToast("Failed ❌");
+        }
+
+    });
+}
+
+// SEARCH FILTER
+document.querySelector(".search-input").addEventListener("input", function(){
+
+    let value = this.value.toLowerCase();
+
+    document.querySelectorAll(".product-card").forEach(card => {
+
+        let title = card.querySelector(".product-title").innerText.toLowerCase();
+
+        card.style.display = title.includes(value) ? "block" : "none";
+    });
+
+});
+
+
+</script>
+<style>
+    .search-box{
+    width: 90%;
+    margin: 25px auto;
+}
+
+.search-input{
+    width: 100%;
+    height: 55px;
+
+    border: 2px solid #d9c89e;
+    border-radius: 18px;
+
+    background: #fffdf7;
+
+    padding: 0 20px;
+
+    font-size: 15px;
+    color: #4b1111;
+
+    outline: none;
+
+    box-shadow: 0 6px 15px rgba(72,50,1,0.08);
+
+    transition: all 0.3s ease;
+}
+
+.search-input:focus{
+    border-color: #6f4e37;
+    box-shadow: 0 8px 20px rgba(111,78,55,0.15);
+}
+
+.search-input::placeholder{
+    color: #9a8b6d;
+}
+.cart-btn{
+    position:fixed;
+    right:70px;
+    bottom:25px;
+
+    width:50px;
+    height:50px;
+    border:none;
+    border-radius:50%;
+
+    background:#4b1111;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    z-index:999;
+}
+
+@media (min-width: 1024px){
+
+    .cart-btn{
+
+        right:580px;
+
+    }
+    
+}
+    
+</style>
+
+</body>
+</html>

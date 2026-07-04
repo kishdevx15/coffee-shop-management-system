@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}KishCraft Coffee{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style3.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="app">
+
+    {% block content %}{% endblock %}
+
+    <div class="nav-bar">
+
+        <a href="{% url 'search' %}" class="nav-item {% if active_nav == 'search' %}active{% endif %}" aria-label="Search">
+            <i class="ti ti-search"></i>
+            <span class="nav-label">Search</span>
+        </a>
+
+        <a href="{% url 'order_status_session' %}" class="nav-item {% if active_nav == 'orders' %}active{% endif %}" aria-label="Orders">
+            <i class="ti ti-clipboard-list"></i>
+            <span class="nav-label">Orders</span>
+        </a>
+
+    </div>
+
+</div>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

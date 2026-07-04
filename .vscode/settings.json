@@ -1,0 +1,9 @@
+{
+  "html.validate.scripts": false,
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

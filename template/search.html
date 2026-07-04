@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Search — KishCraft Coffee{% endblock %}
+
+{% block content %}
+
+<div class="top-bar">
+    <div class="greeting">
+        Find your cup
+        <strong>Search Menu</strong>
+    </div>
+</div>
+
+<div class="search-inline">
+    <input type="text" id="productSearch" class="search-input" placeholder="Search coffee, shakes, desserts...">
+</div>
+
+<div class="section-label">Results <span class="badge" id="resultCount">0</span></div>
+
+<div class="menu-list" id="searchResults">
+    <p class="search-empty">Start typing to search the menu.</p>
+</div>
+
+<!-- Add-to-cart popup (same as product.html) -->
+<div class="order" id="orderBox" style="display:none;">
+    <div class="order-card">
+        <h2 class="coffee-name"></h2>
+        <p class="coffee-price"></p>
+
+        <div class="quantity-box">
+            <button type="button" onclick="decreaseQty()">-</button>
+            <span class="qty-number">1</span>
+            <button type="button" onclick="increaseQty()">+</button>
+        </div>
+
+        <input type="hidden" id="product_id">
+        <input type="hidden" id="quantity_input">
+
+        <button type="button" class="add-cart-btn" onclick="addToCart()">Add to Cart</button>
+        <button type="button" onclick="closeBox()" class="close-btn">Close</button>
+    </div>
+</div>
+
+<div id="toast" class="toast-msg">Added to cart ✔</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const input   = document.getElementById('productSearch');
+    const results = document.getElementById('searchResults');
+    const count   = document.getElementById('resultCount');
+
+    let timer = null;
+    let quantity = 1;
+
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        let query = this.value.trim();
+
+        if (query.length === 0) {
+            results.innerHTML = '<p class="search-empty">Start typing to search the menu.</p>';
+            count.innerText = '0';
+            return;
+        }
+
+        timer = setTimeout(() => runSearch(query), 300);
+    });
+
+    function runSearch(query) {
+        fetch("{% url 'search' %}?q=" + encodeURIComponent(query), {
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(res => res.json())
+        .then(data => {
+            count.innerText = data.products.length;
+
+            if (data.products.length === 0) {
+                results.innerHTML = '<p class="search-empty">No matches found.</p>';
+                return;
+            }
+
+            results.innerHTML = data.products.map(p => `
+                <div class="menu-card">
+                    <div class="menu-icon icon-coffee">
+                        <img src="${p.image_url}" alt="${p.name}">
+                    </div>
+                    <div class="menu-info">
+                        <div class="menu-name">${p.name}</div>
+                        <div class="menu-desc">₹${p.price}</div>
+                    </div>
+                    <button
+                        type="button"
+                        class="menu-arrow"
+                        data-id="${p.id}"
+                        data-name="${p.name}"
+                        data-price="${p.price}"
+                        onclick="openBox(this)">
+                        ›
+                    </button>
+                </div>
+            `).join('');
+        });
+    }
+
+    // ── Add-to-cart popup (same pattern used on product.html) ──
+    function openBox(btn) {
+        document.getElementById('orderBox').style.display = 'block';
+        document.querySelector('.coffee-name').innerText  = btn.dataset.name;
+        document.querySelector('.coffee-price').innerText = '₹' + btn.dataset.price;
+        document.getElementById('product_id').value = btn.dataset.id;
+
+        quantity = 1;
+        document.querySelector('.qty-number').innerText = quantity;
+        document.getElementById('quantity_input').value = quantity;
+    }
+
+    function increaseQty() {
+        quantity++;
+        document.querySelector('.qty-number').innerText = quantity;
+        document.getElementById('quantity_input').value = quantity;
+    }
+
+    function decreaseQty() {
+        if (quantity > 1) {
+            quantity--;
+            document.querySelector('.qty-number').innerText = quantity;
+            document.getElementById('quantity_input').value = quantity;
+        }
+    }
+
+    function closeBox() {
+        document.getElementById('orderBox').style.display = 'none';
+    }
+
+    function showToast(msg) {
+        let toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    function addToCart() {
+        let productId = document.getElementById('product_id').value;
+        let qty       = document.getElementById('quantity_input').value;
+
+        fetch("{% url 'add_to_cart' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: "product_id=" + productId + "&quantity=" + qty
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                showToast("Added to cart ✔");
+                closeBox();
+            } else {
+                showToast("Failed ❌");
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Booking</title>
+
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ✅ FIXED FORM -->
+    <form method="POST" action="{% url 'user_data' %}">
+        {% csrf_token %}
+
+        <div class="inner-box">
+
+            <input type="text" name="name" class="nm" placeholder="Enter your name">
+            <input type="text" name="tbn" class="tb-n" placeholder="Table number">
+
+            <!-- Error message -->
+            {% if error %}
+                <p class="mini">{{ error }}</p>
+            {% else %}
+                <h1 class="mini" style="display:none;">Not available ?</h1>
+            {% endif %}
+
+            <!-- Image -->
+            <img src="{% static 'img/img6 1.png' %}"
+                 style="position:absolute; top:-100px; right:-60px; z-index:1; width: 180px;">
+
+            <!-- Submit button -->
+            <button type="submit" class="but">Confirm table</button>
+
+        </div>
+
+        <h1 class="head">"Confirm & enjoy."</h1>
+
+    </form>
+
+</div>
+
+<script>
+    let inp = document.querySelector(".tb-n");
+    let box = document.querySelector(".mini");
+
+    // Django data (taken tables)
+    let tables = JSON.parse('{{ tables_json|escapejs }}');
+
+    inp.addEventListener("input", function () {
+
+        let value = inp.value.trim();
+
+        if (value === "") {
+            box.style.display = "none";
+            return;
+        }
+
+        let num = parseInt(value);
+
+        if (isNaN(num) || num <= 0 || num > 20) {
+            box.style.display = "block";
+            box.innerText = "Invalid table number ❌";
+            return;
+        }
+
+        let exists = tables.includes(num);
+
+        if (exists) {
+            box.style.display = "block";
+            box.innerText = "Table already taken ❌";
+        } else {
+            box.style.display = "none";
+        }
+
+    });
+</script>
+<style>
+    .tb-n {
+    font-family: 'Irish Grover', cursive !important;
+
+    width: 45%;
+    height: 50px;
+    border-radius: 30px;
+    border: none;
+
+    padding-left: 20px;
+    background-color: #d9d9d9;
+
+    font-size: 18px;
+    color: #4d1818;
+    outline: none;
+}
+</style>
+
+</body>
+</html>
