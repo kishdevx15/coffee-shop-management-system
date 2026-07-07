@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+b-j5(=!)ae&r=b_#305l!g+21b#_7ciy_+iq-ou+&fjv9y1cn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = Trueext
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -128,3 +128,36 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Logging
+# Ensures unhandled exceptions (500 errors) print a full traceback to
+# stdout/stderr, which Render captures in its Logs tab. Without this,
+# Django's default production behavior tries to email tracebacks to
+# ADMINS, which silently disappears if no mail backend is configured.
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
