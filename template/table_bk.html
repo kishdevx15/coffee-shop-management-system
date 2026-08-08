@@ -19,32 +19,27 @@
 
 <div class="container">
 
-    <!-- ✅ FIXED FORM -->
-    <form method="POST" action="{% url 'user_data' %}">
+    <h1 class="head">"Confirm &amp; enjoy."</h1>
+
+    <form method="POST" action="{% url 'user_data' %}" id="tableForm">
         {% csrf_token %}
 
         <div class="inner-box">
 
-            <input type="text" name="name" class="nm" placeholder="Enter your name">
-            <input type="text" name="tbn" class="tb-n" placeholder="Table number">
+            <img src="{% static 'img/img6 1.png' %}" class="corner-img" alt="">
 
-            <!-- Error message -->
+            <input type="text" name="name" class="nm" placeholder="Enter your name" required>
+            <input type="text" name="tbn" class="tb-n" placeholder="Table number" required>
+
             {% if error %}
-                <p class="mini">{{ error }}</p>
+                <p class="mini" style="display:block;">{{ error }}</p>
             {% else %}
-                <h1 class="mini" style="display:none;">Not available ?</h1>
+                <p class="mini"></p>
             {% endif %}
 
-            <!-- Image -->
-            <img src="{% static 'img/img6 1.png' %}"
-                 style="position:absolute; top:-100px; right:-60px; z-index:1; width: 180px;">
-
-            <!-- Submit button -->
-            <button type="submit" class="but">Confirm table</button>
+            <button type="submit" class="but" id="submitBtn">Confirm table</button>
 
         </div>
-
-        <h1 class="head">"Confirm & enjoy."</h1>
 
     </form>
 
@@ -53,12 +48,12 @@
 <script>
     let inp = document.querySelector(".tb-n");
     let box = document.querySelector(".mini");
+    let form = document.getElementById("tableForm");
+    let submitBtn = document.getElementById("submitBtn");
 
-    // Django data (taken tables)
     let tables = JSON.parse('{{ tables_json|escapejs }}');
 
     inp.addEventListener("input", function () {
-
         let value = inp.value.trim();
 
         if (value === "") {
@@ -82,26 +77,17 @@
         } else {
             box.style.display = "none";
         }
+    });
 
+    form.addEventListener("submit", function (e) {
+        if (submitBtn.disabled) {
+            e.preventDefault();
+            return;
+        }
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Booking...";
     });
 </script>
-<style>
-    .tb-n {
-    font-family: 'Irish Grover', cursive !important;
-
-    width: 45%;
-    height: 50px;
-    border-radius: 30px;
-    border: none;
-
-    padding-left: 20px;
-    background-color: #d9d9d9;
-
-    font-size: 18px;
-    color: #4d1818;
-    outline: none;
-}
-</style>
 
 </body>
 </html>
