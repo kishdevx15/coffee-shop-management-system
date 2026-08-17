@@ -70,12 +70,9 @@ def userdata(request):
         session = CustomerSession.objects.create(name=name, table=table)
         request.session["session_id"] = str(session.session_id)
 
-        categories = Category.objects.all()
-        return render(request, "categories.html", {"categories": categories})
+        return redirect('menu')          # ← changed: was render(categories.html)
 
     return render(request, "table_bk.html", {"tables_json": json.dumps(taken)})
-
-
 # ─────────────────────────────────────────────
 # CATEGORY PRODUCTS
 # ─────────────────────────────────────────────
@@ -542,3 +539,7 @@ def staff_login(request):
 def staff_logout(request):
     logout(request)
     return redirect('staff_login')
+
+def menu_home(request):
+    categories = Category.objects.all()
+    return render(request, "categories.html", {"categories": categories})
