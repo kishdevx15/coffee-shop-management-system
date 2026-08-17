@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table Booking</title>
 
-   
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -18,199 +16,186 @@
 <body>
     <style>
         * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.container {
-    width: 100%;
-    max-width: 402px;
-    min-height: 100vh;
-    margin: 0 auto;
-    background-color: #4d1818;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    padding: 40px 16px;
-}
+        .container {
+            width: 100%;
+            max-width: 402px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background-color: #4d1818;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 40px 16px;
+        }
 
-.head {
-    white-space: normal;
-    text-align: center;
-    font-size: clamp(18px, 5.5vw, 24px);
-    color: white;
-    font-family: 'Lilita One', serif;
-    display: flex;
-    position: relative;
-    top: 20px;
-    right: 10px;
-}
+        .head {
+            white-space: normal;
+            text-align: center;
+            font-size: clamp(18px, 5.5vw, 24px);
+            color: white;
+            font-family: 'Lilita One', serif;
+            display: flex;
+            position: relative;
+            top: 20px;
+            right: 10px;
+        }
 
-.inner-box {
-    width: 100%;
-    max-width: 450px;
-    background-color: #f5f3c8;
-    border-radius: 20px;
-    padding: 24px 20px 28px;
-    position: relative;
-   
-}
+        .inner-box {
+            width: 100%;
+            background-color: #f5f3c8;
+            border-radius: 20px;
+            padding: 24px 20px 28px;
+            position: relative;
+        }
 
-.corner-img {
-    position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 130px;
-    z-index: 1;
-    pointer-events: none;
-}
+        .nm {
+            font-family: 'Irish Grover', serif;
+            width: 100%;
+            height: 56px;
+            padding-left: 20px;
+            border-radius: 30px;
+            border: none;
+            background-color: #d9d9d9;
+            font-size: 18px;
+            color: #4d1818;
+            outline: none;
+            display: block;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
 
-.nm {
-    font-family: 'Irish Grover', serif;
-    width: 100%;
-    height: 56px;
-    padding-left: 20px;
-    border-radius: 30px;
-    border: none;
-    background-color: #d9d9d9;
-    font-size: 18px;
-    color: #4d1818;
-    outline: none;
-    display: block;
-    margin-bottom: 16px;
-    position: relative;
-    z-index: 2;
-}
+        .tb-n::placeholder {
+            font-family: 'Irish Grover', cursive;
+        }
 
-.tb-n::placeholder {
-    font-family: 'Irish Grover', cursive;
-}
+        .tb-n {
+            font-family: 'Irish Grover', cursive !important;
+            width: 68%;
+            height: 50px;
+            border-radius: 30px;
+            border: none;
+            padding-left: 20px;
+            background-color: #d9d9d9;
+            font-size: 15px;
+            color: #4d1818;
+            outline: none;
+            position: relative;
+            z-index: 2;
+        }
 
-.tb-n {
-    font-family: 'Irish Grover', cursive !important;
-    width: 68%;
-    height: 50px;
-    border-radius: 30px;
-    border: none;
-    padding-left: 20px;
-    background-color: #d9d9d9;
-    font-size: 15px;
-    color: #4d1818;
-    outline: none;
-    position: relative;
-    z-index: 2;
-}
+        .mini {
+            font-size: 12px;
+            font-family: 'Irish Grover', serif;
+            display: none;
+            margin: 10px 0 4px;
+            padding-left: 4px;
+            color: #b02020;
+            position: relative;
+            z-index: 2;
+        }
 
-.mini {
-    font-size: 12px;
-    font-family: 'Irish Grover', serif;
-    display: none;
-    margin: 10px 0 4px;
-    padding-left: 4px;
-    color: #b02020;
-    position: relative;
-    z-index: 2;
-}
+        .but {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            background: #f3d854;
+            font-family: 'Irish Grover', serif;
+            border: none;
+            cursor: pointer;
+            margin: 16px auto 0;
+            font-size: 15px;
+            position: relative;
+            z-index: 2;
+        }
 
-.but {
-    display: block;
-    width: 100%;
-    padding: 15px 20px;
-    border-radius: 20px;
-    background: #f3d854;
-    font-family: 'Irish Grover', serif;
-    border: none;
-    cursor: pointer;
-    margin: 16px auto 0;
-    font-size: 15px;
-    position: relative;
-    z-index: 2;
-}
+        .but:hover:not(:disabled) {
+            border: 1px solid white;
+        }
 
-.but:hover:not(:disabled) {
-    border: 1px solid white;
-}
-
-.but:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
+        .but:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
     </style>
 
-<div class="container">
+    <div class="container">
 
-    <h1 class="head">"Confirm &amp; enjoy."</h1>
+        <h1 class="head">"Confirm &amp; enjoy."</h1>
 
-    <form method="POST" action="{% url 'user_data' %}" id="tableForm">
-        {% csrf_token %}
+        <form method="POST" action="{% url 'user_data' %}" id="tableForm">
+            {% csrf_token %}
 
-        <div class="inner-box">
+            <div class="inner-box">
 
-            <img src="{% static 'img/img6 1.png' %}" class="corner-img" alt="">
+                <input type="text" name="name" class="nm" placeholder="Enter your name" required>
+                <input type="text" name="tbn" class="tb-n" placeholder="Table number" required>
 
-            <input type="text" name="name" class="nm" placeholder="Enter your name" required>
-            <input type="text" name="tbn" class="tb-n" placeholder="Table number" required>
+                {% if error %}
+                    <p class="mini" style="display:block;">{{ error }}</p>
+                {% else %}
+                    <p class="mini"></p>
+                {% endif %}
 
-            {% if error %}
-                <p class="mini" style="display:block;">{{ error }}</p>
-            {% else %}
-                <p class="mini"></p>
-            {% endif %}
+                <button type="submit" class="but" id="submitBtn">Confirm table</button>
 
-            <button type="submit" class="but" id="submitBtn">Confirm table</button>
+            </div>
 
-        </div>
+        </form>
 
-    </form>
+    </div>
 
-</div>
+    <script>
+        let inp = document.querySelector(".tb-n");
+        let box = document.querySelector(".mini");
+        let form = document.getElementById("tableForm");
+        let submitBtn = document.getElementById("submitBtn");
 
-<script>
-    let inp = document.querySelector(".tb-n");
-    let box = document.querySelector(".mini");
-    let form = document.getElementById("tableForm");
-    let submitBtn = document.getElementById("submitBtn");
+        let tables = JSON.parse('{{ tables_json|escapejs }}');
 
-    let tables = JSON.parse('{{ tables_json|escapejs }}');
+        inp.addEventListener("input", function () {
+            let value = inp.value.trim();
 
-    inp.addEventListener("input", function () {
-        let value = inp.value.trim();
+            if (value === "") {
+                box.style.display = "none";
+                return;
+            }
 
-        if (value === "") {
-            box.style.display = "none";
-            return;
-        }
+            let num = parseInt(value);
 
-        let num = parseInt(value);
+            if (isNaN(num) || num <= 0 || num > 20) {
+                box.style.display = "block";
+                box.innerText = "Invalid table number ❌";
+                return;
+            }
 
-        if (isNaN(num) || num <= 0 || num > 20) {
-            box.style.display = "block";
-            box.innerText = "Invalid table number ❌";
-            return;
-        }
+            let exists = tables.includes(num);
 
-        let exists = tables.includes(num);
+            if (exists) {
+                box.style.display = "block";
+                box.innerText = "Table already taken ❌";
+            } else {
+                box.style.display = "none";
+            }
+        });
 
-        if (exists) {
-            box.style.display = "block";
-            box.innerText = "Table already taken ❌";
-        } else {
-            box.style.display = "none";
-        }
-    });
-
-    form.addEventListener("submit", function (e) {
-        if (submitBtn.disabled) {
-            e.preventDefault();
-            return;
-        }
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Booking...";
-    });
-</script>
+        form.addEventListener("submit", function (e) {
+            if (submitBtn.disabled) {
+                e.preventDefault();
+                return;
+            }
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Booking...";
+        });
+    </script>
 
 </body>
-</html>
+</html>f
