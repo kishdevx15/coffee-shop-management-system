@@ -48,6 +48,8 @@ urlpatterns = [
     # --- staff auth (newly added) ---
     path('staff-login/', staff_login, name='staff_login'),
     path('staff-logout/', staff_logout, name='staff_logout'),
+    path('user_data', userdata, name='user_data'),
+    path('menu/', menu_home, name='menu'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
