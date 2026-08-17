@@ -5,169 +5,73 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Order History</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    .oh-list { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
+    .oh-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .oh-id { font-size: 15px; font-weight: 700; color: var(--text); }
+    .oh-meta { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; }
 
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #F7F3EF;
-      color: #1A1209;
-      min-height: 100vh;
-      padding: 1.5rem 1rem 3rem;
-    }
+    .oh-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .oh-item-row:last-child { border-bottom: none; }
+    .oh-item-qty { color: var(--text-muted); font-size: 12.5px; margin-left: 6px; }
 
-    .container { max-width: 680px; margin: 0 auto; }
+    .oh-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .oh-total { font-weight: 700; color: var(--maroon); }
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-    }
-    h1 { font-size: 1.375rem; font-weight: 600; }
-    .subtitle { font-size: 0.8125rem; color: #A08060; margin-top: 2px; }
+    .status-btn { border: none; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+    .btn-to-making { background: #e4ecfb; color: #2c4a9e; }
+    .btn-to-done { background: var(--success-bg); color: var(--success-text); }
+    .btn-completed { background: var(--border); color: var(--text-muted); cursor: default; }
 
-    /* Status badges */
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 99px;
-    }
-    .badge-pending { background: #FEF3C7; color: #92400E; }
-    .badge-making  { background: #DBEAFE; color: #1E40AF; }
-    .badge-done    { background: #D1FAE5; color: #065F46; }
-
-    /* Order cards */
-    .order-list { display: flex; flex-direction: column; gap: 14px; }
-
-    .order-card {
-      background: #fff;
-      border: 1px solid #EDE6DE;
-      border-radius: 14px;
-      padding: 1.125rem 1.25rem;
-    }
-
-    .order-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 0.875rem;
-    }
-    .order-id {
-      font-size: 0.9375rem;
-      font-weight: 600;
-      color: #1A1209;
-    }
-    .order-meta {
-      font-size: 0.8rem;
-      color: #A08060;
-      margin-top: 3px;
-    }
-
-    /* Items inside order */
-    .item-rows { margin-bottom: 0.75rem; }
-    .item-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.875rem;
-      padding: 5px 0;
-      border-bottom: 1px solid #F7F3EF;
-      color: #3C2A1A;
-    }
-    .item-row:last-child { border-bottom: none; }
-    .item-qty { color: #A08060; font-size: 0.8125rem; margin-left: 6px; }
-    .item-subtotal { font-weight: 500; }
-
-    .order-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 0.625rem;
-      padding-top: 0.625rem;
-      border-top: 1px solid #EDE6DE;
-    }
-    .order-total { font-size: 0.9375rem; font-weight: 700; color: #1A1209; }
-
-    /* Status action buttons */
-    .status-btn {
-      padding: 6px 14px;
-      border-radius: 8px;
-      border: none;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      transition: opacity 0.15s;
-    }
-    .status-btn:hover:not(:disabled) { opacity: 0.8; }
-    .btn-to-making  { background: #DBEAFE; color: #1E40AF; }
-    .btn-to-done    { background: #FEF3C7; color: #92400E; }
-    .btn-completed  { background: #F3F4F6; color: #9CA3AF; cursor: default; }
-
-    .empty {
-      text-align: center;
-      padding: 5rem 1rem;
-      color: #A08060;
-    }
-    .empty svg { margin-bottom: 1rem; opacity: 0.4; }
-    .empty p { font-size: 0.9375rem; }
+    .oh-empty { text-align: center; padding: 4rem 1rem; color: var(--text-muted); }
+    .oh-empty svg { margin-bottom: 1rem; opacity: 0.4; }
   </style>
 </head>
-<body>
-<div class="container">
+<body class="kc">
+<div class="kc-shell wide">
 
-  <div class="topbar">
+  <div class="kc-topbar">
     <div>
+      <div class="eyebrow">All orders — independent of customer records</div>
       <h1>Order history</h1>
-      <p class="subtitle">All orders — independent of customer records.</p>
     </div>
   </div>
 
   {% if orders %}
-  <div class="order-list">
+  <div class="oh-list">
     {% for order in orders %}
-    <div class="order-card" id="order-{{ order.id }}">
+    <div class="kc-card" id="order-{{ order.id }}">
 
-      <div class="order-header">
+      <div class="oh-header">
         <div>
-          <div class="order-id">Order #{{ order.id }}</div>
-          <div class="order-meta">
-            {{ order.customer_name }} · Table {{ order.table_number }} · {{ order.placed_at|date:"d M Y, H:i" }}
-          </div>
+          <div class="oh-id">Order #{{ order.id }}</div>
+          <div class="oh-meta">{{ order.customer_name }} · Table {{ order.table_number }} · {{ order.placed_at|date:"d M Y, H:i" }}</div>
         </div>
-        <span class="badge badge-{{ order.status }}" id="badge-{{ order.id }}">
-          {{ order.get_status_display }}
-        </span>
+        <span class="kc-badge kc-badge-{{ order.status }}" id="badge-{{ order.id }}">{{ order.get_status_display }}</span>
       </div>
 
-      <div class="item-rows">
+      <div class="oh-item-rows">
         {% for item in order.items.all %}
-        <div class="item-row">
-          <span>
-            {{ item.product_name }}
-            <span class="item-qty">× {{ item.quantity }}</span>
-          </span>
-          <span class="item-subtotal">₹{{ item.subtotal|floatformat:2 }}</span>
+        <div class="oh-item-row">
+          <span>{{ item.product_name }}<span class="oh-item-qty">× {{ item.quantity }}</span></span>
+          <span style="font-weight:500;">₹{{ item.subtotal|floatformat:2 }}</span>
         </div>
         {% endfor %}
       </div>
 
-      <div class="order-footer">
-        <span class="order-total">Total: ₹{{ order.get_total|floatformat:2 }}</span>
-
+      <div class="oh-footer">
+        <span class="oh-total">Total: ₹{{ order.get_total|floatformat:2 }}</span>
         <div id="actions-{{ order.id }}">
           {% if order.status == 'pending' %}
-            <button class="status-btn btn-to-making" onclick="advanceStatus({{ order.id }})">
-              Start making
-            </button>
+            <button class="status-btn btn-to-making" onclick="advanceStatus({{ order.id }})">Start making</button>
           {% elif order.status == 'making' %}
-            <button class="status-btn btn-to-done" onclick="advanceStatus({{ order.id }})">
-              Mark as done
-            </button>
+            <button class="status-btn btn-to-done" onclick="advanceStatus({{ order.id }})">Mark as done</button>
           {% else %}
             <button class="status-btn btn-completed" disabled>Completed</button>
           {% endif %}
@@ -179,7 +83,7 @@
   </div>
 
   {% else %}
-  <div class="empty">
+  <div class="oh-empty">
     <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
       <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
       <polyline points="14 2 14 8 20 8"/>
@@ -205,12 +109,10 @@
     const { status } = await res.json();
     const label = { pending: "Pending", making: "Making", done: "Done" }[status];
 
-    // Update badge
     const badge = document.getElementById("badge-" + orderId);
-    badge.className = "badge badge-" + status;
+    badge.className = "kc-badge kc-badge-" + status;
     badge.textContent = label;
 
-    // Update action button
     const actions = document.getElementById("actions-" + orderId);
     if (status === "making") {
       actions.innerHTML = `<button class="status-btn btn-to-done" onclick="advanceStatus(${orderId})">Mark as done</button>`;

@@ -3,72 +3,87 @@
 
 {% block title %}KishCraft Coffee{% endblock %}
 
+{% block extra_css %}
+<style>
+    .cat-menu-list { display: flex; flex-direction: column; gap: 10px; }
+    .cat-menu-form { text-decoration: none; }
+    .cat-menu-card {
+        display: flex; align-items: center; gap: 14px;
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius-md); padding: 12px 14px;
+        cursor: pointer; transition: box-shadow .15s ease;
+    }
+    .cat-menu-card:hover { box-shadow: var(--shadow); }
+    .cat-menu-icon {
+        width: 54px; height: 54px; border-radius: 14px; overflow: hidden;
+        background: var(--border); flex-shrink: 0;
+    }
+    .cat-menu-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .cat-menu-info { flex: 1; min-width: 0; }
+    .cat-menu-name { font-weight: 600; font-size: 15px; color: var(--text); }
+    .cat-menu-desc {
+        font-size: 12.5px; color: var(--text-muted); margin-top: 2px;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cat-menu-arrow {
+        background: none; border: none; font-size: 22px; color: var(--gold);
+        cursor: pointer; padding: 0 4px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
-<form action="{% url 'cart' %}">
-    <div class="top-bar">
-        <div class="greeting">
-            Good morning ☀️
-            <strong>KishCraft Coffee</strong>
-        </div>
-        <button class="cart-btn" type="submit" title="Cart">🛒</button>
+<div class="kc-topbar">
+    <div>
+        <div class="eyebrow">Good morning ☀️</div>
+        <h1>KishCraft Coffee</h1>
     </div>
-</form>
-
-<div class="hero">
-    <div class="hero-deco1"></div>
-    <div class="hero-deco2"></div>
-    <div class="hero-tag">Today's pick</div>
-    <div class="hero-title">Sip. Smile.<br>Repeat.</div>
-    <div class="hero-sub">"Crafted with love, every cup." — KishCraft</div>
+    <form action="{% url 'cart' %}">
+        <button type="submit" class="kc-icon-btn" title="Cart"><i class="ti ti-shopping-cart"></i></button>
+    </form>
 </div>
 
-<div class="search-inline">
-    <input type="text" id="menuSearch" class="search-input" placeholder="Search categories...">
+<div class="kc-hero">
+    <div class="tag">Today's pick</div>
+    <h2>Sip. Smile.<br>Repeat.</h2>
+    <p>"Crafted with love, every cup." — KishCraft</p>
 </div>
 
-<div class="section-label">Our Menu <span class="badge">{{ categories|length }} categories</span></div>
+<input type="text" id="menuSearch" class="kc-input" placeholder="Search categories..." style="margin-bottom: 20px;">
 
-<div class="menu-list" id="menuList">
+<div class="kc-section-label">
+    Our Menu
+    <span class="count">{{ categories|length }} categories</span>
+</div>
 
+<div class="cat-menu-list" id="menuList">
     {% for category in categories %}
-
-    <form method="POST" action="{% url 'category_detail' %}" class="menu-form">
+    <form method="POST" action="{% url 'category_detail' %}" class="cat-menu-form">
         {% csrf_token %}
-
         <input type="hidden" name="category_id" value="{{ category.id }}">
-
-        <div class="menu-card">
-
-            <div class="menu-icon icon-coffee">
+        <button type="submit" class="cat-menu-card" style="border:1px solid var(--border); width:100%; text-align:left; font: inherit;">
+            <div class="cat-menu-icon">
                 <img src="{{ category.image.url }}" alt="{{ category.name }}">
             </div>
-
-            <div class="menu-info">
-                <div class="menu-name">{{ category.name }}</div>
-                <div class="menu-desc">{{ category.description }}</div>
+            <div class="cat-menu-info">
+                <div class="cat-menu-name">{{ category.name }}</div>
+                <div class="cat-menu-desc">{{ category.description }}</div>
             </div>
-
-            <button type="submit" class="menu-arrow">›</button>
-
-        </div>
-
+            <span class="cat-menu-arrow">›</span>
+        </button>
     </form>
-
     {% endfor %}
-
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Live filter of category cards as the user types
     document.getElementById('menuSearch').addEventListener('input', function () {
         let value = this.value.toLowerCase();
-
-        document.querySelectorAll('#menuList .menu-form').forEach(form => {
-            let name = form.querySelector('.menu-name').innerText.toLowerCase();
+        document.querySelectorAll('#menuList .cat-menu-form').forEach(form => {
+            let name = form.querySelector('.cat-menu-name').innerText.toLowerCase();
             form.style.display = name.includes(value) ? '' : 'none';
         });
     });

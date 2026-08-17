@@ -6,32 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}KishCraft Coffee{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'css/style3.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="kc">
 
-<div class="app">
+<div class="kc-shell">
 
     {% block content %}{% endblock %}
 
-    <div class="nav-bar">
-
-        <a href="{% url 'search' %}" class="nav-item {% if active_nav == 'search' %}active{% endif %}" aria-label="Search">
+    <div class="kc-nav">
+        <a href="{% url 'search' %}" class="{% if active_nav == 'search' %}active{% endif %}">
             <i class="ti ti-search"></i>
-            <span class="nav-label">Search</span>
+            <span>Search</span>
         </a>
-
-        <a href="{% url 'order_status_session' %}" class="nav-item {% if active_nav == 'orders' %}active{% endif %}" aria-label="Orders">
+        <a href="{% url 'order_status_session' %}" class="{% if active_nav == 'orders' %}active{% endif %}">
             <i class="ti ti-clipboard-list"></i>
-            <span class="nav-label">Orders</span>
+            <span>Orders</span>
         </a>
-
     </div>
 
 </div>
