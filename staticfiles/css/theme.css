@@ -1,0 +1,256 @@
+/* ==========================================================
+   KishCraft Coffee — Shared Design System
+   Replaces the old per-page mismatched fonts/themes.
+   Include this on EVERY page, after any page-specific CSS reset.
+   ========================================================== */
+
+:root {
+  --maroon: #3d1418;
+  --maroon-dark: #260c0f;
+  --maroon-soft: #522026;
+  --cream: #faf5ea;
+  --card: #ffffff;
+  --gold: #c9982f;
+  --gold-light: #e9cd8a;
+  --text: #2a1810;
+  --text-muted: #8a7263;
+  --success-bg: #e3f3e6;
+  --success-text: #256b34;
+  --warning-bg: #fdf1dc;
+  --warning-text: #966617;
+  --danger-bg: #fbe4e2;
+  --danger-text: #a3271e;
+  --border: #ece2d3;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 10px 30px rgba(38, 12, 15, 0.10);
+  --shadow-lift: 0 16px 40px rgba(38, 12, 15, 0.18);
+  --font-display: 'Fraunces', 'Playfair Display', serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body.kc {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.kc-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 20px 18px 100px;
+  position: relative;
+}
+
+.kc-shell.wide { max-width: 720px; }
+
+/* ---- Top bar ---- */
+.kc-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.kc-topbar .eyebrow {
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.kc-topbar h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--maroon);
+  margin: 2px 0 0;
+}
+.kc-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--maroon);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.kc-back:hover { background: #f4ede2; }
+
+.kc-icon-btn {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--maroon);
+  color: var(--gold-light);
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ---- Cards ---- */
+.kc-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+
+.kc-hero {
+  background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+  color: var(--cream);
+  border-radius: var(--radius-lg);
+  padding: 26px 22px;
+  margin-bottom: 22px;
+  position: relative;
+  overflow: hidden;
+}
+.kc-hero .tag {
+  display: inline-block;
+  background: rgba(233, 205, 138, 0.18);
+  color: var(--gold-light);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.kc-hero h2 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.15;
+  margin: 0 0 8px;
+}
+.kc-hero p {
+  font-size: 13px;
+  color: rgba(250, 245, 234, 0.75);
+  margin: 0;
+}
+
+/* ---- Buttons ---- */
+.kc-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform .1s ease, opacity .15s ease;
+}
+.kc-btn:active { transform: scale(0.98); }
+.kc-btn-primary { background: var(--maroon); color: var(--gold-light); }
+.kc-btn-primary:hover:not(:disabled) { background: var(--maroon-dark); }
+.kc-btn-gold { background: var(--gold); color: var(--maroon-dark); }
+.kc-btn-gold:hover:not(:disabled) { background: var(--gold-light); }
+.kc-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+/* ---- Inputs ---- */
+.kc-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+}
+.kc-input:focus { border-color: var(--gold); }
+.kc-field-error {
+  font-size: 12px;
+  color: var(--danger-text);
+  margin-top: 6px;
+  padding-left: 4px;
+  display: none;
+}
+
+/* ---- Badges / status ---- */
+.kc-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 999px;
+}
+.kc-badge-pending { background: var(--warning-bg); color: var(--warning-text); }
+.kc-badge-making  { background: #e4ecfb; color: #2c4a9e; }
+.kc-badge-done    { background: var(--success-bg); color: var(--success-text); }
+
+/* ---- Section labels ---- */
+.kc-section-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--maroon);
+  margin: 4px 0 12px;
+}
+.kc-section-label .count {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--border);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* ---- Bottom nav ---- */
+.kc-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 24px rgba(38,12,15,0.06);
+}
+.kc-nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+.kc-nav a.active { color: var(--maroon); }
+
+.kc-toast {
+  display: none;
+  margin-top: 14px;
+  background: var(--success-bg);
+  color: var(--success-text);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+}

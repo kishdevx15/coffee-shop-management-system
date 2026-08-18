@@ -1,0 +1,288 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f5f5f5;
+    font-family: "Sorts Mill Goudy", serif;
+}
+
+/* searchbar */
+.search-box{
+    width:90%;
+    margin:20px auto;
+    position:relative;
+}
+
+.search-icon{
+    position:absolute;
+    left:18px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:18px;
+}
+
+.search-input{
+    width:100%;
+    height:50px;
+    border:none;
+    outline:none;
+    border-radius:30px;
+    padding-left:50px;
+    padding-right:15px;
+    background:#fff;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    font-size:15px;
+}
+
+/* MAIN APP */
+.coffee-app {
+    position: relative;
+    max-width: 420px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 402px;
+    min-height: 100vh;
+    background: #EAECCB;
+    margin: 0 auto;
+    position: relative;
+    padding-bottom: 30px;
+    overflow-x: hidden;
+}
+.back-btn {
+    font-size: 15px;
+    padding: 6px;
+    padding-left: 7px;
+    padding-right: 7px;
+    background: #3a0e0e;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: absolute;
+    top: 22px;
+    left: 20px;
+}
+.back-btn:hover {
+    background: #320202;
+}
+
+/* TITLE (FIXED SIZE) */
+
+.app-title {
+    font-family: "Purple Purse", cursive;
+    font-size: 32px; /* medium size */
+    color: #4b1111;
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* SEARCH */
+.search-input {
+    width: 85%;
+    height: 40px;
+    display: block;
+    margin: 20px auto;
+    border: none;
+    border-radius: 30px;
+    padding: 0 15px;
+    outline: none;
+}
+
+.cart-btn{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+
+    width:60px;
+    height:60px;
+    border:none;
+    border-radius:50%;
+
+    background:#4b1111;
+    color:white;
+    font-size:24px;
+    cursor:pointer;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    z-index:999;
+}
+
+/* PRODUCT LIST */
+.product-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* CARD */
+.product-card {
+    width: 90%;
+}
+
+/* CONTENT BOX */
+.product-content {
+    width: 100%;
+    min-height: 120px;
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    position: relative;
+}
+
+/* IMAGE */
+.product-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+
+    position: absolute;
+    left: 15px;
+    top: 15px;
+}
+
+/* TITLE */
+.product-title {
+    margin-left: 80px;
+    font-size: 16px;
+    color: #4b1111;
+    font-weight: bold;
+}
+
+/* DESCRIPTION */
+.product-description {
+    margin-left: 80px;
+    font-size: 11px;
+    line-height: 1.3;
+    color: #333;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2; /* add this */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+/* PRICE */
+.product-price {
+    margin-left: 80px;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #4b1111;
+    font-weight: bold;
+}
+
+/* BUTTON */
+.explore-btn {
+    position: absolute;
+    right: 15px;
+    bottom: 12px;
+
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+
+    background: #4b1111;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* HOVER */
+.explore-btn:hover {
+    background: #2f0b0b;
+}
+
+/* POPUP BACKDROP */
+.order {
+    display: none;
+
+    position: fixed;   /* FIXED (better than absolute) */
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+
+/* POPUP CARD */
+.order-card {
+    width: 280px;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* POPUP TEXT */
+.coffee-name {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.coffee-price {
+    text-align: center;
+    font-size: 18px;
+    color: #4b1111;
+    margin-bottom: 20px;
+}
+
+/* QUANTITY */
+.quantity-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.qty-number {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.quantity-box button {
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+    background: #4b1111;
+    color: white;
+    cursor: pointer;
+}
+
+/* BUTTONS */
+.add-cart-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #4b1111;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.close-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #ddd;
+    cursor: pointer;
+}
