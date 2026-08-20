@@ -304,6 +304,16 @@ async function finaliseBill(orderId) {
     btn.innerHTML = '&#128172; Bill &amp; Send WhatsApp';
   }
 }
+
+// ── Auto-refresh every 10s (skip if staff is typing a phone number) ──
+setInterval(() => {
+  const typing = document.activeElement &&
+                 document.activeElement.tagName === 'INPUT' &&
+                 document.activeElement.value.trim().length > 0;
+  if (!typing) {
+    location.reload();
+  }
+}, 10000);
 </script>
 </body>
 </html>

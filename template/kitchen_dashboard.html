@@ -232,12 +232,58 @@ const CSRF_TOKEN        = "{{ csrf_token }}";
 
 let allOrders     = [];
 let currentFilter = 'all';
+let knownOrderIds = new Set();
+let firstLoad     = true;
+
+// ── Notification sound (no external file needed) ──
+function playNotificationSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.15].forEach((delay, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = i === 0 ? 880 : 1046;
+      gain.gain.setValueAtTime(0.25, ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.3);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.3);
+    });
+  } catch (e) { /* audio blocked until user interacts once — ignore */ }
+}
+
+// ── Ask permission for desktop notifications (once) ──
+if ('Notification' in window && Notification.permission === 'default') {
+  Notification.requestPermission();
+}
 
 // ── Fetch orders from Django ──
 async function fetchOrders() {
   const res  = await fetch(`${ORDERS_URL}?status=all`);
   const data = await res.json();
   allOrders  = data.orders;
+
+  if (!firstLoad) {
+    const newOnes = allOrders.filter(o => !knownOrderIds.has(o.id));
+    if (newOnes.length) {
+      playNotificationSound();
+      showToast(`🔔 ${newOnes.length} new order${newOnes.length > 1 ? 's' : ''}!`);
+      if ('Notification' in window && Notification.permission === 'granted') {
+        newOnes.forEach(o => {
+          new Notification('New Order — Table ' + o.table_number, {
+            body: o.items.map(i => `${i.quantity}x ${i.product_name}`).join(', '),
+            icon: '🍽️'
+          });
+        });
+      }
+    }
+  }
+
+  allOrders.forEach(o => knownOrderIds.add(o.id));
+  firstLoad = false;
+
   updateCounts();
   renderOrders();
 }
@@ -272,110 +318,4 @@ function updateCounts() {
 
 // ── Elapsed time ──
 function getElapsed(placed_at) {
-  const m = Math.floor((Date.now() - new Date(placed_at)) / 60000);
-  if (m < 1)  return { label: 'Just now', cls: '' };
-  if (m < 10) return { label: `${m}m ago`, cls: '' };
-  if (m < 20) return { label: `${m}m ago`, cls: 'warn' };
-  return { label: `${m}m ago`, cls: 'urgent' };
-}
-
-// ── Render order cards ──
-function renderOrders() {
-  const grid     = document.getElementById('orders-grid');
-  const filtered = currentFilter === 'all' ? allOrders : allOrders.filter(o => o.status === currentFilter);
-  const sord     = { pending: 0, making: 1, done: 2 };
-  filtered.sort((a, b) => sord[a.status] - sord[b.status] || new Date(a.placed_at) - new Date(b.placed_at));
-
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="empty-state"><i class="ti ti-coffee-off"></i><p>No orders here</p></div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(o => {
-    const el    = getElapsed(o.placed_at);
-    const items = o.items.map(i => `
-      <div class="item-row">
-        <span class="item-qty">${i.quantity}</span>
-        <span class="item-name">${i.product_name}</span>
-        <span class="item-price">₹${(i.price * i.quantity).toFixed(0)}</span>
-      </div>`).join('');
-
-    let actions = '';
-    if (o.status === 'pending') {
-      actions = `<button class="act-btn btn-start" onclick="updateStatus(${o.id},'making')"><i class="ti ti-chef-hat"></i> Start Making</button>`;
-    } else if (o.status === 'making') {
-      actions = `
-        <button class="act-btn btn-undo" onclick="updateStatus(${o.id},'pending')"><i class="ti ti-arrow-back-up"></i></button>
-        <button class="act-btn btn-done" onclick="updateStatus(${o.id},'done')"><i class="ti ti-check"></i> Mark Done</button>`;
-    } else {
-      actions = `<button class="act-btn btn-undo" onclick="updateStatus(${o.id},'making')"><i class="ti ti-arrow-back-up"></i> Undo</button>`;
-    }
-
-    return `
-      <div class="order-card status-${o.status}">
-        <div class="card-stripe"></div>
-        <div class="card-head">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span class="order-id">#${o.id}</span>
-            <span class="table-badge"><i class="ti ti-armchair"></i> Table ${o.table_number}</span>
-          </div>
-          <span class="status-pill pill-${o.status}">${o.status}</span>
-        </div>
-        <div class="divider"></div>
-        <div class="items-list">${items}</div>
-        <div class="card-foot">
-          <span class="elapsed ${el.cls}"><i class="ti ti-clock"></i> ${el.label}</span>
-          <span class="total">₹${o.total.toFixed(0)}</span>
-        </div>
-        <div class="card-actions">${actions}</div>
-      </div>`;
-  }).join('');
-}
-
-// ── Filter ──
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderOrders();
-}
-
-// ── View switcher ──
-function showView(v, btn) {
-  document.getElementById('view-dashboard').style.display = v === 'dashboard' ? 'block' : 'none';
-  document.getElementById('view-orders').style.display    = v === 'orders'    ? 'flex'  : 'none';
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (v === 'orders') fetchOrders();
-}
-
-// ── Clock ──
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent    = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-  const ds = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  document.getElementById('date-label').textContent  = ds;
-  document.getElementById('topbar-date').textContent = ds;
-  document.getElementById('orders-date').textContent = ds;
-}
-
-// ── Toast ──
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ── Auto-refresh orders every 30s ──
-setInterval(fetchOrders, 30000);
-
-// ── Init ──
-setInterval(updateClock, 1000);
-updateClock();
-fetchOrders();
-</script>
-</body>
-</html>
+  const m = Math.floor((Date.now() -
