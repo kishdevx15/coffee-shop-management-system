@@ -19,11 +19,38 @@
             display: flex; flex-direction: column; align-items: center;
             justify-content: center; padding: 40px 28px; text-align: center;
         }
+        .start-badge-wrap {
+            position: relative; width: 84px; height: 84px;
+            margin-bottom: 24px; display: flex; align-items: center; justify-content: center;
+        }
+        .start-badge-ring {
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 1.5px solid rgba(212,175,90,0.35);
+            animation: ringPulse 2.8s ease-in-out infinite;
+        }
+        @keyframes ringPulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50%      { transform: scale(1.12); opacity: 0; }
+        }
         .start-badge {
-            width: 64px; height: 64px; border-radius: 50%;
-            background: var(--gold); color: var(--maroon-dark);
+            position: relative; width: 64px; height: 64px; border-radius: 50%;
+            background: linear-gradient(145deg, var(--gold-light) 0%, var(--gold) 55%, #a97e26 100%);
+            color: var(--maroon-dark);
             display: flex; align-items: center; justify-content: center;
-            font-size: 26px; margin-bottom: 20px;
+            font-size: 26px;
+            box-shadow: 0 6px 18px rgba(201,152,47,0.45), inset 0 2px 4px rgba(255,255,255,0.35);
+        }
+        .steam { position: absolute; top: -14px; width: 3px; height: 14px; border-radius: 3px;
+            background: rgba(250,245,234,0.55); filter: blur(0.5px);
+            animation: steamRise 2.4s ease-in-out infinite;
+        }
+        .steam:nth-child(1) { left: 26px; animation-delay: 0s; }
+        .steam:nth-child(2) { left: 40px; animation-delay: 0.6s; }
+        .steam:nth-child(3) { left: 54px; animation-delay: 1.2s; }
+        @keyframes steamRise {
+            0%   { transform: translateY(0) scaleX(1);   opacity: 0; }
+            30%  { opacity: 0.7; }
+            100% { transform: translateY(-16px) scaleX(1.6); opacity: 0; }
         }
         .start-title {
             font-family: var(--font-display); font-weight: 700;
@@ -51,7 +78,13 @@
 
     <div class="start-shell">
         <form method="get" action="Table-booking">
-            <div class="start-badge">☕</div>
+            <div class="start-badge-wrap">
+                <div class="start-badge-ring"></div>
+                <span class="steam"></span>
+                <span class="steam"></span>
+                <span class="steam"></span>
+                <div class="start-badge">☕</div>
+            </div>
             <h1 class="start-title">KishCraft</h1>
             <div class="start-sub">Fresh on the menu</div>
             <p class="start-par">"At KishCraft, coffee isn't just a drink — it's an experience. From the first pour to the last sip, every cup is crafted with passion. Discover freshness on the menu and let every sip spark your story."</p>
